@@ -8,12 +8,14 @@ export default function App() {
   const [shoppingList, setShoppingList] = useState([]);
 
   const loadData = () => {
-    fetch("https://hn7jn8-8080.csb.app/api/list")
+    fetch("https://node-shopping-list-o90d.onrender.com/api/list")
       .then(x=> x.json())
       .then(response => {
         setShoppingList(response);
       });
   }
+
+  useEffect(loadData, []);
 
   return (
     <div className="App">
@@ -24,7 +26,7 @@ export default function App() {
       <main>
         <ShoppingForm />
         <ShoppingList />
-        <p>JSON.stringify(shoppingList)</p>
+        <p>{JSON.stringify(shoppingList)}</p>
       </main>
 
     </div>
