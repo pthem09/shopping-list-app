@@ -7,8 +7,10 @@ import ShoppingList from './Components/ShoppingList/ShoppingList';
 export default function App() {
   const [shoppingList, setShoppingList] = useState([]);
 
+  const API_ROOT = "https://hn7jn8-8080.csb.app";
+
   const loadData = () => {
-    fetch("https://hn7jn8-8080.csb.app/api/list")
+    fetch(`${API_ROOT}/api/list`)
       .then(x=> x.json())
       .then(response => {
         setShoppingList(response);
@@ -17,6 +19,22 @@ export default function App() {
 
   useEffect(loadData, []);
 
+  const addItem = (item, quantity) => {
+    fetch(`${API_ROOT}/api/list/new`, {
+      method: 'POST',
+      body: JSON.stringify({
+        item,
+        quantity
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=utf-8'
+      },
+      mode: 'cors'
+    })
+      .then((x) => x.json())
+      .then(loadData);
+  };
+
   return (
     <div className="App">
       <header>
@@ -24,9 +42,8 @@ export default function App() {
       </header>
 
       <main>
-        <ShoppingForm />
-        <ShoppingList />
-        <p>{JSON.stringify(shoppingList)}</p>
+        <ShoppingForm addItem={addItem} />
+        <ShoppingList items={shoppingList} />
       </main>
 
     </div>
