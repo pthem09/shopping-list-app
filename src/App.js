@@ -8,7 +8,7 @@ export default function App() {
   const [shoppingList, setShoppingList] = useState([]);
 
   const loadData = () => {
-    fetch("https://node-shopping-list-o90d.onrender.com/api/list")
+    fetch("https://hn7jn8-8080.csb.app/api/list")
       .then(x=> x.json())
       .then(response => {
         setShoppingList(response);
