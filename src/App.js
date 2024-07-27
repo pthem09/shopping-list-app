@@ -35,6 +35,18 @@ export default function App() {
       .then(loadData);
   };
 
+  const deleteItem = (id) => {
+    fetch(`${API_ROOT}/api/list/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json; charset=utf-8'
+      },
+      mode: 'cors'
+    })
+      .then((x) => x.json())
+      .then(loadData);
+  };
+
   return (
     <div className="App">
       <header>
@@ -43,7 +55,7 @@ export default function App() {
 
       <main>
         <ShoppingForm addItem={addItem} />
-        <ShoppingList items={shoppingList} />
+        <ShoppingList items={shoppingList} deleteItem={deleteItem} />
       </main>
 
     </div>
