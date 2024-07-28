@@ -1,19 +1,7 @@
-import React from "react";
+import React from 'react';
+import ShoppingItem from './ShoppingItem';
 
-function ShoppingItem({ id, itemName, quantity, deleteItem }) {
-    function handleDelete(event) {
-        event.preventDefault();
-        deleteItem(id);
-    }
-
-    return (
-        <li>
-            {itemName} ({quantity}) 
-            <button onClick={handleDelete}>Delete</button></li>
-    );
-}
-
-export default function ShoppingList({ items, deleteItem }) {
+export default function ShoppingList({ items, deleteItem, updateItem }) {
     
     const ItemsJsx = items.map(listItem => 
         <ShoppingItem 
@@ -22,6 +10,7 @@ export default function ShoppingList({ items, deleteItem }) {
             itemName={listItem.item}
             quantity={listItem.quantity}
             deleteItem={deleteItem}
+            updateItem={updateItem}
         />
     );
 

@@ -1,0 +1,9 @@
+.shopping-item-li {
+    margin: 1rem;
+    padding: 2rem;
+    border: 1px solid black;
+    border-radius: 2rem;
+    background-color: #ccc;
+    list-style: none;
+    box-shadow: 2px 2px 4px black;
+}

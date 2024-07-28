@@ -47,6 +47,22 @@ export default function App() {
       .then(loadData);
   };
 
+  const updateItem = (id, itemName, quantity) => {
+    fetch(`${API_ROOT}/api/list/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json; charset=utf-8'
+      },
+      mode: 'cors',
+      body: JSON.stringify({
+        item: itemName,
+        quantity,
+      }),
+    })
+      .then((x) => x.json())
+      .then(loadData);
+  };
+
   return (
     <div className="App">
       <header>
@@ -54,8 +70,12 @@ export default function App() {
       </header>
 
       <main>
-        <ShoppingForm addItem={addItem} />
-        <ShoppingList items={shoppingList} deleteItem={deleteItem} />
+        <ShoppingForm submitItem={addItem} />
+        <ShoppingList
+          items={shoppingList}
+          deleteItem={deleteItem}
+          updateItem={updateItem}  
+        />
       </main>
 
     </div>
