@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import ShoppingForm from './Components/ShoppingForm/ShoppingForm';
 import ShoppingList from './Components/ShoppingList/ShoppingList';
+import PageSelect from './Components/PageSelect/PageSelect';
 
 export default function App() {
   const [shoppingList, setShoppingList] = useState([]);
@@ -63,6 +64,15 @@ export default function App() {
       .then(loadData);
   };
 
+  const paginator = () => {
+    const pgNums = Math.ceil(shoppingList.length / 1)
+    let pgBtns = [];
+    for (let i  = 1; i <= pgNums; i ++) {
+      pgBtns.push(i);
+    }
+    return pgBtns;
+  };
+
   return (
     <div className="App">
       <header>
@@ -71,12 +81,18 @@ export default function App() {
 
       <main>
         <ShoppingForm submitItem={addItem} />
+        <PageSelect 
+          prevPageFlag={false}
+          nextPageFlag={false}
+          currentPage={1}
+          pageNumberArray={paginator()}
+        />
         <ShoppingList
-          items={shoppingList}
+          items={shoppingList.slice(0, 4)}
           deleteItem={deleteItem}
           updateItem={updateItem}  
         />
-      </main>
+    </main>
 
     </div>
   );

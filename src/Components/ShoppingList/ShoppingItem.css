@@ -1,3 +1,7 @@
+body {
+    background-color: lightyellow;
+}
+
 .shopping-item-li {
     margin: 1rem;
     padding: 2rem;
@@ -6,4 +10,11 @@
     background-color: #ccc;
     list-style: none;
     box-shadow: 2px 2px 4px black;
+}
+
+.shopping-list-container {
+    background-color: rgb(0, 0, 255, 15%);
+    margin: 1rem;
+    padding: 1rem;
+    min-width: 250px;
 }

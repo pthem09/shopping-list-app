@@ -15,6 +15,8 @@ export default function ShoppingList({ items, deleteItem, updateItem }) {
     );
 
     return (
-        <ul>{ItemsJsx}</ul>
-    );
+        <div className="shopping-list-container">
+            <ul>{ItemsJsx}</ul>
+        </div>
+    ); 
 }

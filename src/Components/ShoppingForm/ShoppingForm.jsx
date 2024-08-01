@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./ShoppingForm.css";
 
 export default function ShoppingForm({
         submitItem,
@@ -27,7 +28,7 @@ export default function ShoppingForm({
     return (
         <form action="#" method="POST" onSubmit={handleSubmit}>
             <label htmlFor="item">Item</label>
-            <input
+            <input className="shopping-list-field"
                 type="text"
                 required
                 id="item"
@@ -35,7 +36,7 @@ export default function ShoppingForm({
                 value={item}
                 onChange={handleItemChange}/>
             <label htmlFor="quantity">Quantity</label>
-            <input
+            <input className="shopping-list-field"
                 type="number"
                 required
                 id="quantity"
