@@ -6,6 +6,6 @@ export default function JumpToPageMenuItem({ menuElement }) {
     }
   
     return (
-    <ul onClick={GoToPage}>{menuElement}</ul>
+    <ul id={menuElement} onClick={GoToPage}>Jump to Page: {menuElement}</ul>
   )
 }

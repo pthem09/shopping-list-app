@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { createElement } from 'react';
 import PerPageMenuItem from './PerPageMenuItem';
 import JumpToPageMenuItem from './JumpToPageMenuItem';
 
-export default function PageSelect({ prevPageFlag, nextPageFlag, currentPage, pageNumberArray }) {
+export default function PageSelect({ suppressPrevPgBtn, suppressNextPgBtn, suppressPageJump, currentPage, pageNumberArray }) {
     
     const itemsPerPage = ["5", "10", "All"];
-    const itemsPerPageElement = itemsPerPage.map(item => <PerPageMenuItem menuElement={item}/>);
-    const jumpToPageElement = pageNumberArray.map(item => <JumpToPageMenuItem menuElement={item}/>);
+    const itemsPerPageElement = itemsPerPage.map(item => <PerPageMenuItem key={item} menuElement={item}/>);
+    const jumpToPageElement = createJump();
+
+    function createJump() {
+        if (!suppressPageJump) {
+            return pageNumberArray.map(item => <JumpToPageMenuItem key={item} menuElement={item}/>);
+        }
+        return '';
+    }
 
     function goToPrevious(event) {
         event.preventDefault();
         currentPage -= 1;
         currentPage = Math.max(1, currentPage);
         if (currentPage === 1) {
-            prevPageFlag = true;
+            suppressPrevPgBtn = true;
         } else {
-            prevPageFlag = false;
+            suppressPrevPgBtn = false;
         }
-        console.log(currentPage + ' ' + prevPageFlag);
+        console.log(currentPage + ' ' + suppressPrevPgBtn);
     }
   
     function goToNext(event) {
@@ -28,10 +35,10 @@ export default function PageSelect({ prevPageFlag, nextPageFlag, currentPage, pa
 
     return (
         <div>
-            <button type="Submit" onClick={goToPrevious} disabled={prevPageFlag}>Previous Page</button>
-            <button type="Submit" onClick={goToNext} disabled={nextPageFlag}>Next Page</button>
-            Items per Page: {itemsPerPageElement}    
-            Jump to Page: {jumpToPageElement}
+            {suppressPrevPgBtn ? '' : <button key="prev" type="Submit" onClick={goToPrevious}>Previous Page</button>}
+            {suppressNextPgBtn || suppressPageJump ? '' : <button key="next" type="Submit" onClick={goToNext}>Next Page</button>}
+            Items per Page: {itemsPerPageElement}
+           {jumpToPageElement}
         </div>
     )
 }

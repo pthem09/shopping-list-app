@@ -13,6 +13,6 @@ export default function PerPageMenuItem({ menuElement }) {
     }
   
     return (
-    <ul onClick={logResult}>{menuElement}</ul>
+    <ul id={menuElement} onClick={logResult}>{menuElement}</ul>
   )
 }

@@ -8,16 +8,51 @@ import PageSelect from './Components/PageSelect/PageSelect';
 export default function App() {
   const [shoppingList, setShoppingList] = useState([]);
 
+  let [userDisplayChoices, setUserDisplayChoices] = useState(getInitialState());
+
+  useEffect(saveUserChoices, [userDisplayChoices]);
+
+  function saveUserChoices() {
+    localStorage.setItem("userChoices", JSON.stringify(userDisplayChoices));
+  }
+
+  function getInitialState() {
+    let savedState = localStorage.getItem("userChoices");
+    if (typeof savedState === "string") {
+      return JSON.parse(savedState);
+    }
+    return [];
+  }
+
   const API_ROOT = "https://hn7jn8-8080.csb.app";
 
   const loadData = () => {
     fetch(`${API_ROOT}/api/list`)
-      .then(x=> x.json())
+      .then(x => x.json())
       .then(response => {
         setShoppingList(response);
-      });
+        setUserMenu(response.length);
+      } 
+    )
   }
 
+  const setUserMenu = ({ numItems }) => {
+    if (userDisplayChoices === '[]') {
+      setUserDisplayChoices(() => [{
+          currentPage: 1,
+          itemsPerPage: 5,
+          suppressPrevBtn: true,
+          suppressNextBtn: Math.ceil(numItems / 5) === 1,
+          suppressJumpToPg: Math.ceil(numItems / 5) === 1,
+      }]);
+    }
+    else {
+      const perPageChoice = JSON.parse(localStorage.getItem("userChoices"))[0].itemsPerPage;
+      JSON.parse(localStorage.getItem("userChoices"))[0].suppressNextBtn = Math.ceil(numItems / perPageChoice) === 1;
+      JSON.parse(localStorage.getItem("userChoices"))[0].suppressJumpToPg = Math.ceil(numItems / perPageChoice) === 1;
+    }
+  }
+  
   useEffect(loadData, []);
 
   const addItem = (item, quantity) => {
@@ -65,11 +100,15 @@ export default function App() {
   };
 
   const paginator = () => {
-    const pgNums = Math.ceil(shoppingList.length / 1)
+    const pgNums = Math.ceil(
+        shoppingList.length / 
+        JSON.parse(localStorage.getItem("userChoices"))[0].itemsPerPage        
+      );
     let pgBtns = [];
     for (let i  = 1; i <= pgNums; i ++) {
       pgBtns.push(i);
     }
+    console.log('paginator ' + pgBtns.length);
     return pgBtns;
   };
 
@@ -82,13 +121,17 @@ export default function App() {
       <main>
         <ShoppingForm submitItem={addItem} />
         <PageSelect 
-          prevPageFlag={false}
-          nextPageFlag={false}
-          currentPage={1}
+          suppressPrevPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressPrevBtn}
+          suppressNextPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressNextBtn}
+          currentPage={JSON.parse(localStorage.getItem("userChoices"))[0].currentPage}
           pageNumberArray={paginator()}
+          suppressPageJump={paginator().length === 1}
         />
         <ShoppingList
-          items={shoppingList.slice(0, 4)}
+          items={shoppingList.slice(
+            JSON.parse(localStorage.getItem("userChoices"))[0].itemsPerPage * (JSON.parse(localStorage.getItem("userChoices"))[0].currentPage - 1),
+            (JSON.parse(localStorage.getItem("userChoices"))[0].itemsPerPage * JSON.parse(localStorage.getItem("userChoices"))[0].currentPage) - 1
+          )}
           deleteItem={deleteItem}
           updateItem={updateItem}  
         />
