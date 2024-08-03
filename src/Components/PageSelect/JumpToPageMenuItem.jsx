@@ -1,11 +1,8 @@
 import React from 'react';
 
-export default function JumpToPageMenuItem({ menuElement }) {
-    function GoToPage() {
-        console.log(menuElement);
-    }
-  
+export default function JumpToPageMenuItem({ menuElement, clickFunc }) {
+
     return (
-    <ul id={menuElement} onClick={GoToPage}>Jump to Page: {menuElement}</ul>
+    <ul id={menuElement} onClick={() => clickFunc({menuElement})}>Jump to Page: {menuElement}</ul>
   )
 }

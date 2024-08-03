@@ -1,18 +1,8 @@
 import React from 'react';
 
-export default function PerPageMenuItem({ menuElement }) {
-    function logResult() {
-      let t;
-      if (menuElement === 'All') {
-        t = 5060;
-      }
-      else {
-        t = parseInt(menuElement);
-      }
-      console.log(t);
-    }
-  
+export default function PerPageMenuItem({ menuElement, clickFunc }) {
+
     return (
-    <ul id={menuElement} onClick={logResult}>{menuElement}</ul>
+    <ul id={`${menuElement}-per`} onClick={() => clickFunc({menuElement})}>{menuElement}</ul>
   )
 }
