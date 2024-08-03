@@ -10,8 +10,6 @@ export default function App() {
 
   let [userDisplayChoices, setUserDisplayChoices] = useState(getInitialState());
 
-  useEffect(saveUserChoices, [userDisplayChoices]);
-
   function saveUserChoices() {
     localStorage.setItem("userChoices", JSON.stringify(userDisplayChoices));
   }
@@ -73,9 +71,11 @@ export default function App() {
       if (clickedListValue.menuElement === "All") {
         newVals = calcSliceRangeAndBools(shoppingList.length, 1);
         parsedSave[0].itemsPerPage = shoppingList.length;
+        parsedSave[0].allItemsPerPage = true;
       } else {
         newVals = calcSliceRangeAndBools(clickedListValue.menuElement, parsedSave[0].currentPage);
         parsedSave[0].itemsPerPage = clickedListValue.menuElement;
+        parsedSave[0].allItemsPerPage = false;
       }
 
       parsedSave[0].currentPage = newVals[0];
@@ -167,26 +167,33 @@ export default function App() {
           suppressNextBtn: Math.ceil(numItems / 5) === 1,
           suppressJumpToPg: Math.ceil(numItems / 5) === 1,
           sliceStart: 0,
-          sliceEnd: 5
+          sliceEnd: 5,
+          allItemsPerPage: false
       }]);
     }
     else {
       const parsedUserChoices = JSON.parse(localStorage.getItem("userChoices"))[0]
+      let newItems = parsedUserChoices.itemsPerPage;
+      if (parsedUserChoices.allItemsPerPage) {
+        newItems = numItems;
+      }
 
       setUserDisplayChoices(() => [{
         currentPage: parsedUserChoices.currentPage,
-        itemsPerPage: parsedUserChoices.itemsPerPage,
+        itemsPerPage: newItems,
         suppressPrevBtn: parsedUserChoices.suppressPrevBtn,
         suppressNextBtn: parsedUserChoices.suppressNextBtn,
         suppressJumpToPg: parsedUserChoices.suppressJumpToPg,
         sliceStart: parsedUserChoices.sliceStart,
-        sliceEnd: parsedUserChoices.sliceEnd
+        sliceEnd: parsedUserChoices.sliceEnd,
+        allItemsPerPage: parsedUserChoices.allItemsPerPage
     }]);     
 
     }
   }
   
   useEffect(loadData, []);
+  useEffect(saveUserChoices, [userDisplayChoices]);
 
 
   const addItem = (item, quantity) => {
