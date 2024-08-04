@@ -1,7 +1,6 @@
 .dropdown-item:hover {
     background-color: rgb(0, 0, 255, 100%);
     font-style: oblique;
-    color: yellow;
 }
 
 .page-select-menu {
