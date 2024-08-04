@@ -35,9 +35,11 @@ export default function App() {
   }
 
   function calcSliceRangeAndBools(elemsPerPg, currPg, totElems, allElemsPerPg, reloadNeeded) {
+
     let parsedSave = JSON.parse(localStorage.getItem("userChoices"));
     let newCurr = parseInt(currPg);
     let lastPg = Math.ceil(totElems / elemsPerPg);
+
     let newElemsPerPg = parseInt(elemsPerPg);
     if (allElemsPerPg) {
       newElemsPerPg = totElems;
@@ -78,7 +80,6 @@ export default function App() {
     if (reloadNeeded) {
       window.location.reload();
     }
-    
   }
 
   function perPageFunction(clickedListValue) {
