@@ -19,9 +19,9 @@ Hosting link: https://pthem09.github.io/shopping-list-app
     - JavaScript
     - SQL (CodeSandbox)
 - Ideas for improvements:
-1. Create a log-in page to allow users to view and edit only their items.
-2. Allow users to view and restore recently deleted items by creating a deleted flag in the SQL database. Also, allow for users to permanently delete items from the recycle bin.
-3. Allow users to select dark mode and different color schemes.
+  1. Create a log-in page to allow users to view and edit only their items.
+  2. Allow users to view and restore recently deleted items by creating a deleted flag in the SQL database. Also, allow for users to permanently delete items from the recycle bin.
+  3. Allow users to select dark mode and different color schemes.
 
 ## User stories
 
