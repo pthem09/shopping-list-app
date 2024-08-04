@@ -34,15 +34,20 @@ export default function App() {
     )
   }
 
-  function calcSliceRangeAndBools(elemsPerPg, currPg, totElems) {
+  function calcSliceRangeAndBools(elemsPerPg, currPg, totElems, allElemsPerPg, reloadNeeded) {
+    let parsedSave = JSON.parse(localStorage.getItem("userChoices"));
     let newCurr = parseInt(currPg);
     let lastPg = Math.ceil(totElems / elemsPerPg);
+    let newElemsPerPg = parseInt(elemsPerPg);
+    if (allElemsPerPg) {
+      newElemsPerPg = totElems;
+    }
 
     if (newCurr > lastPg) {
       newCurr = 1;
     }
 
-    let start = elemsPerPg * (newCurr  - 1);
+    let start = newElemsPerPg * (newCurr  - 1);
     let end = start + parseInt(elemsPerPg);
 
     let suppPrev = false;
@@ -59,34 +64,32 @@ export default function App() {
       suppNext = true;
     }
 
-    return [newCurr, start, end, suppPrev, suppNext, suppJump];
+    parsedSave[0].currentPage = newCurr;
+    parsedSave[0].itemsPerPage = newElemsPerPg;
+    parsedSave[0].sliceStart = start;
+    parsedSave[0].sliceEnd = end;
+    parsedSave[0].suppressPrevBtn = suppPrev;
+    parsedSave[0].suppressNextBtn = suppNext;
+    parsedSave[0].suppressJumpToPg = suppJump;
+    parsedSave[0].allItemsPerPage = allElemsPerPg;
+    parsedSave[0].totalElements = totElems;
+    localStorage.setItem("userChoices", JSON.stringify(parsedSave));
+
+    if (reloadNeeded) {
+      window.location.reload();
+    }
+    
   }
 
   function perPageFunction(clickedListValue) {
     let savedState = localStorage.getItem("userChoices");
-    console.log(shoppingList.length);
     if (typeof savedState === "string") {
       let parsedSave = JSON.parse(savedState);
-      let newVals = [];
       if (clickedListValue.menuElement === "All") {
-        newVals = calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length);
-        parsedSave[0].itemsPerPage = shoppingList.length;
-        parsedSave[0].allItemsPerPage = true;
+        calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true);
       } else {
-        newVals = calcSliceRangeAndBools(clickedListValue.menuElement, parsedSave[0].currentPage, shoppingList.length);
-        parsedSave[0].itemsPerPage = parseInt(clickedListValue.menuElement);
-        parsedSave[0].allItemsPerPage = false;
+        calcSliceRangeAndBools(clickedListValue.menuElement, parsedSave[0].currentPage, shoppingList.length, false);
       }
-
-      parsedSave[0].currentPage = newVals[0];
-      parsedSave[0].sliceStart = newVals[1];
-      parsedSave[0].sliceEnd = newVals[2];
-      parsedSave[0].suppressPrevBtn = newVals[3];
-      parsedSave[0].suppressNextBtn = newVals[4];
-      parsedSave[0].suppressJumpToPg = newVals[5];
-
-      localStorage.setItem("userChoices", JSON.stringify(parsedSave));
-      window.location.reload();
     }
 
   }
@@ -100,17 +103,14 @@ export default function App() {
       parsedSave[0].currentPage =
         Math.min(parsedSave[0].currentPage + 1, maxPage);
 
-      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage, shoppingList.length);
+      calcSliceRangeAndBools(
+        parsedSave[0].itemsPerPage,
+        parsedSave[0].currentPage,
+        shoppingList.length,
+        parsedSave[0].allElemsPerPg,
+        true
+      );
 
-      parsedSave[0].currentPage = newVals[0];
-      parsedSave[0].sliceStart = newVals[1];
-      parsedSave[0].sliceEnd = newVals[2];
-      parsedSave[0].suppressPrevBtn = newVals[3];
-      parsedSave[0].suppressNextBtn = newVals[4];
-      parsedSave[0].suppressJumpToPg = newVals[5];
-
-      localStorage.setItem("userChoices", JSON.stringify(parsedSave));
-      window.location.reload();
     }   
   }
 
@@ -121,20 +121,15 @@ export default function App() {
       let parsedSave = JSON.parse(savedState);
       parsedSave[0].currentPage = Math.max(parsedSave[0].currentPage - 1, 1);
 
-      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage, shoppingList.length);
-
-      parsedSave[0].currentPage = newVals[0];
-      parsedSave[0].sliceStart = newVals[1];
-      parsedSave[0].sliceEnd = newVals[2];
-      parsedSave[0].suppressPrevBtn = newVals[3];
-      parsedSave[0].suppressNextBtn = newVals[4];
-      parsedSave[0].suppressJumpToPg = newVals[5];
-
-      localStorage.setItem("userChoices", JSON.stringify(parsedSave));
-      window.location.reload();
+      calcSliceRangeAndBools(
+        parsedSave[0].itemsPerPage,
+        parsedSave[0].currentPage,
+        shoppingList.length,
+        parsedSave[0].allElemsPerPg,
+        true
+      );
     } 
   }
-
 
   function pageJumpFunction(clickedPageJump) {
     let savedState = localStorage.getItem("userChoices");
@@ -143,18 +138,13 @@ export default function App() {
       let parsedSave = JSON.parse(savedState);
       parsedSave[0].currentPage = clickedPageJump.menuElement;
 
-      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage, shoppingList.length);
-
-      parsedSave[0].currentPage = newVals[0];
-      parsedSave[0].sliceStart = newVals[1];
-      parsedSave[0].sliceEnd = newVals[2];
-      parsedSave[0].suppressPrevBtn = newVals[3];
-      parsedSave[0].suppressNextBtn = newVals[4];
-      parsedSave[0].suppressJumpToPg = newVals[5];
-
-      localStorage.setItem("userChoices", JSON.stringify(parsedSave));
-      window.location.reload();
-      localStorage.setItem("userChoices", JSON.stringify(parsedSave));
+      calcSliceRangeAndBools(
+        parsedSave[0].itemsPerPage,
+        parsedSave[0].currentPage,
+        shoppingList.length,
+        parsedSave[0].allElemsPerPg,
+        true
+      );
     }
   }
 
@@ -177,36 +167,16 @@ export default function App() {
       let newItems = parsedUserChoices.itemsPerPage;
       if (parsedUserChoices.allItemsPerPage && newItems !== numItems) {
         newItems = numItems;
-        let newVals = calcSliceRangeAndBools(newItems, parsedUserChoices.currentPage, numItems);
-
-        setUserDisplayChoices(() => [{
-          currentPage: newVals[0],
-          itemsPerPage: newItems,
-          suppressPrevBtn: newVals[3],
-          suppressNextBtn: newVals[4],
-          suppressJumpToPg: newVals[5],
-          sliceStart: newVals[1],
-          sliceEnd: newVals[2],
-          allItemsPerPage: parsedUserChoices.allItemsPerPage,
-          totalElements: numItems
-        }]);
-
-        window.location.reload();
       }
 
-      let newVals = calcSliceRangeAndBools(newItems, parsedUserChoices.currentPage, numItems);
+      let changePage = 0;
+      if (numItems > parsedUserChoices.totalElements) {
+        changePage = 1;
+      } else if (numItems < parsedUserChoices.totalElements && parsedUserChoices.sliceStart > 0) {
+        changePage = -1;
+      }
 
-      setUserDisplayChoices(() => [{
-        currentPage: newVals[0],
-        itemsPerPage: newItems,
-        suppressPrevBtn: newVals[3],
-        suppressNextBtn: newVals[4],
-        suppressJumpToPg: newVals[5],
-        sliceStart: newVals[1],
-        sliceEnd: newVals[2],
-        allItemsPerPage: parsedUserChoices.allItemsPerPage,
-        totalElements: numItems
-    }]);     
+      calcSliceRangeAndBools(newItems, parsedUserChoices.currentPage + changePage, numItems, parsedUserChoices.allElemsPerPg, false);
 
     }
   }
