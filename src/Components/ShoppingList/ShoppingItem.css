@@ -2,10 +2,6 @@ body {
     background-color: lightyellow;
 }
 
-button {
-    margin: 0.25rem;
-}
-
 .shopping-item-li {
     margin: 1rem;
     padding: 2rem;
@@ -25,6 +21,7 @@ button {
 
 .shopping-edit {
     background-color: lightgreen;
+    margin: 5px;
 }
 
 .shopping-delete {

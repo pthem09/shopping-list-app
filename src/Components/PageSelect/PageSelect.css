@@ -1,6 +1,7 @@
 .dropdown-item:hover {
-    background-color: rgb(0, 0, 255, 20%);
+    background-color: rgb(0, 0, 255, 100%);
     font-style: oblique;
+    color: yellow;
 }
 
 .page-select-menu {
@@ -8,6 +9,10 @@
     flex-wrap: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.prev-next-btn {
+    min-width: 120px;
 }
 
 /* vertical menu styles */

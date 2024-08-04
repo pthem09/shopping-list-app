@@ -6,8 +6,8 @@ import {
   } from 'reactstrap';
 import PerPageMenuItem from './PerPageMenuItem';
 import JumpToPageMenuItem from './JumpToPageMenuItem';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './PageSelect.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function PageSelect({
         suppressPrevPgBtn,
@@ -59,8 +59,8 @@ export default function PageSelect({
 
     return (
         <nav className="page-select-menu">
-            {suppressPrevPgBtn ? '' : <button className="bg-warning" key="prev" type="Submit" onClick={prevFunc}>Previous Page</button>}
-            {suppressNextPgBtn ? '' : <button className="bg-info" key="next" type="Submit" onClick={nextFunc}>Next Page</button>}
+            {suppressPrevPgBtn ? '' : <button className="bg-warning prev-next-btn" key="prev" type="Submit" onClick={prevFunc}>Previous Page</button>}
+            {suppressNextPgBtn ? '' : <button className="bg-info prev-next-btn" key="next" type="Submit" onClick={nextFunc}>Next Page</button>}
             {itemsPerPageElement}
             {jumpToPageElement}
         </nav>
