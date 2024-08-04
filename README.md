@@ -8,9 +8,9 @@ Hosting link: https://pthem09.github.io/shopping-list-app
 
 - The website allows users to enter a wishlist. Entries are stored in a public SQL database and are visible by anyone and accessible from any machine.
 
--- When many items are added to the list, it may become cumbersome to scroll through. Additional functionality allows users to select the number of items displayed on the screen.
--- Dropdown menus appear as needed to allow users to go to the next or previous page, or jump to a specific page.
--- The current displayed page will change as items are added and deleted, as necessary.
+  - When many items are added to the list, it may become cumbersome to scroll through. Additional functionality allows users to select the number of items displayed on the screen.
+  - Dropdown menus appear as needed to allow users to go to the next or previous page, or jump to a specific page.
+  - The current displayed page will change as items are added and deleted, as necessary.
 
 - Technologies used:
 
