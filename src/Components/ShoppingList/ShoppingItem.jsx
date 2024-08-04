@@ -33,8 +33,8 @@ export default function ShoppingItem({ id, itemName, quantity, deleteItem, updat
     return (
         <li className="shopping-item-li">
             { isEdit ? EditJsx : ReadOnlyJsx }
-            <button onClick={handleDelete} disabled={isEdit}>Delete</button>
-            <button onClick={handleEdit}>{ isEdit ? 'Cancel' : 'Edit' }</button>
+            {isEdit ? '' : <button className="shopping-delete" onClick={handleDelete} >Delete</button>}
+            <button className={isEdit? "shopping-cancel" : "shopping-edit"} onClick={handleEdit}>{ isEdit ? 'Cancel' : 'Edit' }</button>
         </li>
     );
 }

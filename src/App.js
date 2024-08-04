@@ -263,7 +263,6 @@ export default function App() {
         <PageSelect 
           suppressPrevPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressPrevBtn}
           suppressNextPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressNextBtn}
-          currentPage={JSON.parse(localStorage.getItem("userChoices"))[0].currentPage}
           pageNumberArray={paginator()}
           suppressPageJump={paginator().length === 1}
           perPageChoiceFunc={perPageFunction}

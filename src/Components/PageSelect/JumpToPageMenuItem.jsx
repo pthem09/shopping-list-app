@@ -1,8 +1,9 @@
 import React from 'react';
+import { DropdownItem } from 'reactstrap';
 
 export default function JumpToPageMenuItem({ menuElement, clickFunc }) {
 
     return (
-    <ul id={menuElement} onClick={() => clickFunc({menuElement})}>Jump to Page: {menuElement}</ul>
+      <DropdownItem id={menuElement} onClick={() => clickFunc({menuElement})}>{menuElement}</DropdownItem>
   )
 }

@@ -1,26 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu
+  } from 'reactstrap';
 import PerPageMenuItem from './PerPageMenuItem';
 import JumpToPageMenuItem from './JumpToPageMenuItem';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './PageSelect.css';
 
 export default function PageSelect({
         suppressPrevPgBtn,
         suppressNextPgBtn,
         suppressPageJump,
-        currentPage,
         pageNumberArray,
         perPageChoiceFunc,
         pageJumpFunc,
         nextFunc,
-        prevFunc    
+        prevFunc
     }) {
+
+    const [dropdownOpenItems, setDropdownOpenItems] = useState(false);
+    const toggleItems= () => setDropdownOpenItems((prevStateItems) => !prevStateItems);        
+
+    const [dropdownOpenJump, setDropdownOpenJump] = useState(false);
+    const toggleJump = () => setDropdownOpenJump((prevStateJump) => !prevStateJump);
     
     const itemsPerPage = ["5", "10", "All"];
-    const itemsPerPageElement = itemsPerPage.map(item => <PerPageMenuItem key={`${item}-per`} menuElement={item} clickFunc={perPageChoiceFunc}/>);
+    const itemsPerPageStart = itemsPerPage.map(item => <PerPageMenuItem key={`${item}-per`} menuElement={item} clickFunc={perPageChoiceFunc}/>);
+    const itemsPerPageElement = (
+        <div className="d-flex p-5">
+            <Dropdown isOpen={dropdownOpenJump} toggle={toggleJump} direction="down">
+                <DropdownToggle caret>Items per Page:</DropdownToggle>
+                <DropdownMenu>
+                    {itemsPerPageStart}
+                </DropdownMenu>
+            </Dropdown>
+        </div>
+    );
     const jumpToPageElement = createJump();
 
     function createJump() {
         if (!suppressPageJump) {
-            return pageNumberArray.map(item => <JumpToPageMenuItem key={`${item}-jump`} menuElement={item} clickFunc={pageJumpFunc}/>);
+            let temp = pageNumberArray.map(item => <JumpToPageMenuItem key={`${item}-jump`} menuElement={item} clickFunc={pageJumpFunc}/>);
+            return (
+                <div className="d-flex p-5">
+                    <Dropdown isOpen={dropdownOpenItems} toggle={toggleItems} direction="down">
+                        <DropdownToggle caret>Jump to Page</DropdownToggle>
+                        <DropdownMenu>
+                            {temp}
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
+            );
         }
         return '';
     }
@@ -29,7 +61,7 @@ export default function PageSelect({
         <div>
             {suppressPrevPgBtn ? '' : <button key="prev" type="Submit" onClick={prevFunc}>Previous Page</button>}
             {suppressNextPgBtn ? '' : <button key="next" type="Submit" onClick={nextFunc}>Next Page</button>}
-            Items per Page: {itemsPerPageElement}
+            {itemsPerPageElement}
            {jumpToPageElement}
         </div>
     )

@@ -1,6 +1,22 @@
 .shopping-list-field {
     background-color:  whitesmoke;
-    display: inline-block;
-    vertical-align: middle;
-    min-width: 250px;
+}
+
+.form-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-group label {
+    margin-right: 10px;    
+}
+
+#quantity {
+    max-width: 4rem;
+    min-width: 1rem;
+}
+
+#item {
+    min-width: 10rem;
 }

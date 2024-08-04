@@ -27,24 +27,30 @@ export default function ShoppingForm({
 
     return (
         <form action="#" method="POST" onSubmit={handleSubmit}>
-            <label htmlFor="item">Item</label>
-            <input className="shopping-list-field"
-                type="text"
-                required
-                id="item"
-                name="item"
-                value={item}
-                onChange={handleItemChange}/>
-            <label htmlFor="quantity">Quantity</label>
-            <input className="shopping-list-field"
-                type="number"
-                required
-                id="quantity"
-                name="quantity"
-                value={quantity}
-                min="0"
-                onChange={handleQuantityChange}/>
-            <button type="Submit">{submitButtonText}</button>
+            <div className="form-group">
+                <label htmlFor="item">Item</label>
+                <input className="shopping-list-field"
+                    type="text"
+                    required
+                    id="item"
+                    name="item"
+                    value={item}
+                    onChange={handleItemChange}/>
+            </div>
+            <div className="form-group">
+                <label htmlFor="quantity">Quantity</label>
+                <input className="shopping-list-field"
+                    type="number"
+                    required
+                    id="quantity"
+                    name="quantity"
+                    value={quantity}
+                    min="0"
+                    onChange={handleQuantityChange}/>
+            </div>
+            <div className="form-group">
+                <button className="shopping-edit" type="Submit">{submitButtonText}</button>
+            </div>
         </form>
     );
 }
