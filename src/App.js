@@ -34,9 +34,9 @@ export default function App() {
     )
   }
 
-  function calcSliceRangeAndBools(elemsPerPg, currPg) {
+  function calcSliceRangeAndBools(elemsPerPg, currPg, totElems) {
     let newCurr = parseInt(currPg);
-    let lastPg = Math.ceil(shoppingList.length / elemsPerPg);
+    let lastPg = Math.ceil(totElems / elemsPerPg);
 
     if (newCurr > lastPg) {
       newCurr = 1;
@@ -64,17 +64,17 @@ export default function App() {
 
   function perPageFunction(clickedListValue) {
     let savedState = localStorage.getItem("userChoices");
-
+    console.log(shoppingList.length);
     if (typeof savedState === "string") {
       let parsedSave = JSON.parse(savedState);
       let newVals = [];
       if (clickedListValue.menuElement === "All") {
-        newVals = calcSliceRangeAndBools(shoppingList.length, 1);
+        newVals = calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length);
         parsedSave[0].itemsPerPage = shoppingList.length;
         parsedSave[0].allItemsPerPage = true;
       } else {
-        newVals = calcSliceRangeAndBools(clickedListValue.menuElement, parsedSave[0].currentPage);
-        parsedSave[0].itemsPerPage = clickedListValue.menuElement;
+        newVals = calcSliceRangeAndBools(clickedListValue.menuElement, parsedSave[0].currentPage, shoppingList.length);
+        parsedSave[0].itemsPerPage = parseInt(clickedListValue.menuElement);
         parsedSave[0].allItemsPerPage = false;
       }
 
@@ -100,7 +100,7 @@ export default function App() {
       parsedSave[0].currentPage =
         Math.min(parsedSave[0].currentPage + 1, maxPage);
 
-      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage);
+      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage, shoppingList.length);
 
       parsedSave[0].currentPage = newVals[0];
       parsedSave[0].sliceStart = newVals[1];
@@ -121,7 +121,7 @@ export default function App() {
       let parsedSave = JSON.parse(savedState);
       parsedSave[0].currentPage = Math.max(parsedSave[0].currentPage - 1, 1);
 
-      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage);
+      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage, shoppingList.length);
 
       parsedSave[0].currentPage = newVals[0];
       parsedSave[0].sliceStart = newVals[1];
@@ -143,7 +143,7 @@ export default function App() {
       let parsedSave = JSON.parse(savedState);
       parsedSave[0].currentPage = clickedPageJump.menuElement;
 
-      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage);
+      let newVals = calcSliceRangeAndBools(parsedSave[0].itemsPerPage, parsedSave[0].currentPage, shoppingList.length);
 
       parsedSave[0].currentPage = newVals[0];
       parsedSave[0].sliceStart = newVals[1];
@@ -158,7 +158,7 @@ export default function App() {
     }
   }
 
-  const setUserMenu = ({ numItems }) => {
+  const setUserMenu = (numItems) => {
     if (userDisplayChoices === '[]') {
       setUserDisplayChoices(() => [{
           currentPage: 1,
@@ -168,25 +168,44 @@ export default function App() {
           suppressJumpToPg: Math.ceil(numItems / 5) === 1,
           sliceStart: 0,
           sliceEnd: 5,
-          allItemsPerPage: false
+          allItemsPerPage: false,
+          totalElements: numItems
       }]);
     }
     else {
       const parsedUserChoices = JSON.parse(localStorage.getItem("userChoices"))[0]
       let newItems = parsedUserChoices.itemsPerPage;
-      if (parsedUserChoices.allItemsPerPage) {
+      if (parsedUserChoices.allItemsPerPage && newItems !== numItems) {
         newItems = numItems;
+        let newVals = calcSliceRangeAndBools(newItems, parsedUserChoices.currentPage, numItems);
+
+        setUserDisplayChoices(() => [{
+          currentPage: newVals[0],
+          itemsPerPage: newItems,
+          suppressPrevBtn: newVals[3],
+          suppressNextBtn: newVals[4],
+          suppressJumpToPg: newVals[5],
+          sliceStart: newVals[1],
+          sliceEnd: newVals[2],
+          allItemsPerPage: parsedUserChoices.allItemsPerPage,
+          totalElements: numItems
+        }]);
+
+        window.location.reload();
       }
 
+      let newVals = calcSliceRangeAndBools(newItems, parsedUserChoices.currentPage, numItems);
+
       setUserDisplayChoices(() => [{
-        currentPage: parsedUserChoices.currentPage,
+        currentPage: newVals[0],
         itemsPerPage: newItems,
-        suppressPrevBtn: parsedUserChoices.suppressPrevBtn,
-        suppressNextBtn: parsedUserChoices.suppressNextBtn,
-        suppressJumpToPg: parsedUserChoices.suppressJumpToPg,
-        sliceStart: parsedUserChoices.sliceStart,
-        sliceEnd: parsedUserChoices.sliceEnd,
-        allItemsPerPage: parsedUserChoices.allItemsPerPage
+        suppressPrevBtn: newVals[3],
+        suppressNextBtn: newVals[4],
+        suppressJumpToPg: newVals[5],
+        sliceStart: newVals[1],
+        sliceEnd: newVals[2],
+        allItemsPerPage: parsedUserChoices.allItemsPerPage,
+        totalElements: numItems
     }]);     
 
     }
@@ -255,7 +274,8 @@ export default function App() {
   return (
     <div className="App">
       <header>
-        <h1>Shopping List App</h1>
+        <h1>Enter your shopping wish list!</h1>
+        <h2>Entries are public, so make it fun and safe for work :) </h2>
       </header>
 
       <main>
@@ -264,7 +284,7 @@ export default function App() {
           suppressPrevPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressPrevBtn}
           suppressNextPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressNextBtn}
           pageNumberArray={paginator()}
-          suppressPageJump={paginator().length === 1}
+          suppressPageJump={JSON.parse(localStorage.getItem("userChoices"))[0].suppressJumpToPg}
           perPageChoiceFunc={perPageFunction}
           pageJumpFunc={pageJumpFunction}
           prevFunc={goToPrev}

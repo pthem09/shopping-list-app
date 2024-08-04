@@ -29,7 +29,7 @@ export default function PageSelect({
     const itemsPerPage = ["5", "10", "All"];
     const itemsPerPageStart = itemsPerPage.map(item => <PerPageMenuItem key={`${item}-per`} menuElement={item} clickFunc={perPageChoiceFunc}/>);
     const itemsPerPageElement = (
-        <div className="d-flex p-5">
+        <div className="d-flex p-2">
             <Dropdown isOpen={dropdownOpenJump} toggle={toggleJump} direction="down">
                 <DropdownToggle caret>Items per Page:</DropdownToggle>
                 <DropdownMenu>
@@ -44,7 +44,7 @@ export default function PageSelect({
         if (!suppressPageJump) {
             let temp = pageNumberArray.map(item => <JumpToPageMenuItem key={`${item}-jump`} menuElement={item} clickFunc={pageJumpFunc}/>);
             return (
-                <div className="d-flex p-5">
+                <div className="d-flex p-2">
                     <Dropdown isOpen={dropdownOpenItems} toggle={toggleItems} direction="down">
                         <DropdownToggle caret>Jump to Page</DropdownToggle>
                         <DropdownMenu>
@@ -58,11 +58,11 @@ export default function PageSelect({
     }
 
     return (
-        <div>
-            {suppressPrevPgBtn ? '' : <button key="prev" type="Submit" onClick={prevFunc}>Previous Page</button>}
-            {suppressNextPgBtn ? '' : <button key="next" type="Submit" onClick={nextFunc}>Next Page</button>}
+        <nav className="page-select-menu">
+            {suppressPrevPgBtn ? '' : <button className="bg-warning" key="prev" type="Submit" onClick={prevFunc}>Previous Page</button>}
+            {suppressNextPgBtn ? '' : <button className="bg-info" key="next" type="Submit" onClick={nextFunc}>Next Page</button>}
             {itemsPerPageElement}
-           {jumpToPageElement}
-        </div>
+            {jumpToPageElement}
+        </nav>
     )
 }
