@@ -32,7 +32,7 @@ export default function App() {
       totalElements: 5,
       defaultLoad: true
     }]));
-    return [];
+    loadData(true);
   }
 
   const API_ROOT = "https://hn7jn8-8080.csb.app";
