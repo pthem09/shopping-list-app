@@ -9,6 +9,7 @@ export default function App() {
   const [shoppingList, setShoppingList] = useState([]);
 
   let [userDisplayChoices, setUserDisplayChoices] = useState(getInitialState());
+  useEffect(saveUserChoices, [userDisplayChoices]);
 
   function saveUserChoices() {
     localStorage.setItem("userChoices", JSON.stringify(userDisplayChoices));
@@ -19,6 +20,18 @@ export default function App() {
     if (typeof savedState === "string") {
       return JSON.parse(savedState);
     }
+    localStorage.setItem("userChoices", JSON.stringify([{
+      currentPage: 1,
+      itemsPerPage: 5,
+      suppressPrevBtn: true,
+      suppressNextBtn: true,
+      suppressJumpToPg: true,
+      sliceStart: 0,
+      sliceEnd: 5,
+      allItemsPerPage: false,
+      totalElements: 5,
+      defaultLoad: true
+    }]));
     return [];
   }
 
@@ -34,9 +47,9 @@ export default function App() {
     )
   }
 
-  function calcSliceRangeAndBools(elemsPerPg, currPg, totElems, allElemsPerPg, reloadNeeded) {
+  useEffect(loadData, []);
 
-    let parsedSave = JSON.parse(localStorage.getItem("userChoices"));
+  function calcSliceRangeAndBools(elemsPerPg, currPg, totElems, allElemsPerPg, refreshNeeded) {
     let newCurr = parseInt(currPg);
     let lastPg = Math.ceil(totElems / elemsPerPg);
 
@@ -66,125 +79,86 @@ export default function App() {
       suppNext = true;
     }
 
-    parsedSave[0].currentPage = newCurr;
-    parsedSave[0].itemsPerPage = newElemsPerPg;
-    parsedSave[0].sliceStart = start;
-    parsedSave[0].sliceEnd = end;
-    parsedSave[0].suppressPrevBtn = suppPrev;
-    parsedSave[0].suppressNextBtn = suppNext;
-    parsedSave[0].suppressJumpToPg = suppJump;
-    parsedSave[0].allItemsPerPage = allElemsPerPg;
-    parsedSave[0].totalElements = totElems;
-    localStorage.setItem("userChoices", JSON.stringify(parsedSave));
+    setUserDisplayChoices(() => [{
+      currentPage: newCurr,
+      itemsPerPage: newElemsPerPg,
+      sliceStart: start,
+      sliceEnd: end,
+      suppressPrevBtn: suppPrev,
+      suppressNextBtn: suppNext,
+      suppressJumpToPg: suppJump,
+      allItemsPerPage: allElemsPerPg,
+      totalElements: totElems,
+      defaultLoad: false
+    }]);
 
-    if (reloadNeeded) {
+    if (refreshNeeded) {
       window.location.reload();
     }
   }
 
   function perPageFunction(clickedListValue) {
-    let savedState = localStorage.getItem("userChoices");
-    if (typeof savedState === "string") {
-      let parsedSave = JSON.parse(savedState);
-      if (clickedListValue.menuElement === "All") {
-        calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true);
-      } else {
-        calcSliceRangeAndBools(clickedListValue.menuElement, parsedSave[0].currentPage, shoppingList.length, false);
-      }
+    if (clickedListValue.menuElement === "All") {
+      calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true);
+    } else {
+      calcSliceRangeAndBools(clickedListValue.menuElement, userDisplayChoices[0].currentPage, shoppingList.length, true);
     }
-
   }
 
   function goToNext() {
-    let savedState = localStorage.getItem("userChoices");
+    let maxPage = Math.ceil(shoppingList.length / userDisplayChoices[0].itemsPerPage);
+    userDisplayChoices[0].currentPage =
+      Math.min(userDisplayChoices[0].currentPage + 1, maxPage);
 
-    if (typeof savedState === "string") {
-      let parsedSave = JSON.parse(savedState);
-      let maxPage = Math.ceil(shoppingList.length / parsedSave[0].itemsPerPage);
-      parsedSave[0].currentPage =
-        Math.min(parsedSave[0].currentPage + 1, maxPage);
-
-      calcSliceRangeAndBools(
-        parsedSave[0].itemsPerPage,
-        parsedSave[0].currentPage,
-        shoppingList.length,
-        parsedSave[0].allElemsPerPg,
-        true
-      );
-
-    }   
+    calcSliceRangeAndBools(
+      userDisplayChoices[0].itemsPerPage,
+      userDisplayChoices[0].currentPage,
+      shoppingList.length,
+      userDisplayChoices[0].allElemsPerPg,
+      true
+    ); 
   }
 
   function goToPrev() {
-    let savedState = localStorage.getItem("userChoices");
+    userDisplayChoices[0].currentPage = Math.max(userDisplayChoices[0].currentPage - 1, 1);
 
-    if (typeof savedState === "string") {
-      let parsedSave = JSON.parse(savedState);
-      parsedSave[0].currentPage = Math.max(parsedSave[0].currentPage - 1, 1);
-
-      calcSliceRangeAndBools(
-        parsedSave[0].itemsPerPage,
-        parsedSave[0].currentPage,
-        shoppingList.length,
-        parsedSave[0].allElemsPerPg,
-        true
-      );
-    } 
+    calcSliceRangeAndBools(
+      userDisplayChoices[0].itemsPerPage,
+      userDisplayChoices[0].currentPage,
+      shoppingList.length,
+      userDisplayChoices[0].allElemsPerPg,
+      true
+    );
   }
 
   function pageJumpFunction(clickedPageJump) {
-    let savedState = localStorage.getItem("userChoices");
+    userDisplayChoices[0].currentPage = clickedPageJump.menuElement;
 
-    if (typeof savedState === "string") {
-      let parsedSave = JSON.parse(savedState);
-      parsedSave[0].currentPage = clickedPageJump.menuElement;
-
-      calcSliceRangeAndBools(
-        parsedSave[0].itemsPerPage,
-        parsedSave[0].currentPage,
-        shoppingList.length,
-        parsedSave[0].allElemsPerPg,
-        true
-      );
-    }
+    calcSliceRangeAndBools(
+      userDisplayChoices[0].itemsPerPage,
+      userDisplayChoices[0].currentPage,
+      shoppingList.length,
+      userDisplayChoices[0].allElemsPerPg,
+      true
+    );
   }
 
   const setUserMenu = (numItems) => {
-    if (userDisplayChoices === '[]') {
-      setUserDisplayChoices(() => [{
-          currentPage: 1,
-          itemsPerPage: 5,
-          suppressPrevBtn: true,
-          suppressNextBtn: Math.ceil(numItems / 5) === 1,
-          suppressJumpToPg: Math.ceil(numItems / 5) === 1,
-          sliceStart: 0,
-          sliceEnd: 5,
-          allItemsPerPage: false,
-          totalElements: numItems
-      }]);
-    }
-    else {
-      const parsedUserChoices = JSON.parse(localStorage.getItem("userChoices"))[0]
-      let newItems = parsedUserChoices.itemsPerPage;
-      if (parsedUserChoices.allItemsPerPage && newItems !== numItems) {
+      let newItems =  userDisplayChoices[0].itemsPerPage;
+      if ( userDisplayChoices[0].allItemsPerPage && newItems !== numItems) {
         newItems = numItems;
       }
 
       let changePage = 0;
-      if (numItems > parsedUserChoices.totalElements) {
+      if (numItems >  userDisplayChoices[0].totalElements && !userDisplayChoices[0].defaultLoad) {
         changePage = 1;
-      } else if (numItems < parsedUserChoices.totalElements && parsedUserChoices.sliceStart > 0) {
+      } else if (numItems <  userDisplayChoices[0].totalElements &&  userDisplayChoices[0].sliceStart > 0) {
         changePage = -1;
       }
 
-      calcSliceRangeAndBools(newItems, parsedUserChoices.currentPage + changePage, numItems, parsedUserChoices.allElemsPerPg, false);
+      calcSliceRangeAndBools(newItems,  userDisplayChoices[0].currentPage + changePage, numItems,  userDisplayChoices[0].allElemsPerPg, false);
 
-    }
   }
-  
-  useEffect(loadData, []);
-  useEffect(saveUserChoices, [userDisplayChoices]);
-
 
   const addItem = (item, quantity) => {
     fetch(`${API_ROOT}/api/list/new`, {
