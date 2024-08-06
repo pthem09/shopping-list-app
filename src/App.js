@@ -17,7 +17,7 @@ export default function App() {
 
   function getInitialState() {
     let savedState = localStorage.getItem("userChoices");
-    if (typeof savedState === "string") {
+    if (typeof savedState === "string" && savedState !== '[]') {
       return JSON.parse(savedState);
     }
     localStorage.setItem("userChoices", JSON.stringify([{
