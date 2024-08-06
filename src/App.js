@@ -1,9 +1,9 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 
+import PageSelect from './Components/PageSelect/PageSelect';
 import ShoppingForm from './Components/ShoppingForm/ShoppingForm';
 import ShoppingList from './Components/ShoppingList/ShoppingList';
-import PageSelect from './Components/PageSelect/PageSelect';
 
 export default function App() {
   const [shoppingList, setShoppingList] = useState([]);
@@ -37,12 +37,12 @@ export default function App() {
 
   const API_ROOT = "https://hn7jn8-8080.csb.app";
 
-  const loadData = () => {
+  const loadData = (askRefresh = false) => {
     fetch(`${API_ROOT}/api/list`)
       .then(x => x.json())
       .then(response => {
         setShoppingList(response);
-        setUserMenu(response.length);
+        setUserMenu(response.length, askRefresh);
       } 
     )
   }
@@ -99,9 +99,10 @@ export default function App() {
 
   function perPageFunction(clickedListValue) {
     if (clickedListValue.menuElement === "All") {
-      calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true);
+      calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true, true);
     } else {
-      calcSliceRangeAndBools(clickedListValue.menuElement, userDisplayChoices[0].currentPage, shoppingList.length, true);
+      userDisplayChoices[0].allItemsPerPage = false;
+      calcSliceRangeAndBools(clickedListValue.menuElement, userDisplayChoices[0].currentPage, shoppingList.length, false, true);
     }
   }
 
@@ -109,7 +110,6 @@ export default function App() {
     let maxPage = Math.ceil(shoppingList.length / userDisplayChoices[0].itemsPerPage);
     userDisplayChoices[0].currentPage =
       Math.min(userDisplayChoices[0].currentPage + 1, maxPage);
-
     calcSliceRangeAndBools(
       userDisplayChoices[0].itemsPerPage,
       userDisplayChoices[0].currentPage,
@@ -143,7 +143,7 @@ export default function App() {
     );
   }
 
-  const setUserMenu = (numItems) => {
+  const setUserMenu = (numItems, refreshAfter) => {
       let newItems =  userDisplayChoices[0].itemsPerPage;
       if ( userDisplayChoices[0].allItemsPerPage && newItems !== numItems) {
         newItems = numItems;
@@ -152,11 +152,21 @@ export default function App() {
       let changePage = 0;
       if (numItems >  userDisplayChoices[0].totalElements && !userDisplayChoices[0].defaultLoad) {
         changePage = 1;
-      } else if (numItems <  userDisplayChoices[0].totalElements &&  userDisplayChoices[0].sliceStart > 0) {
+      } else if (
+          numItems <  userDisplayChoices[0].totalElements
+          && numItems < userDisplayChoices[0].sliceStart
+          && userDisplayChoices[0].sliceStart > 0
+        ) {
         changePage = -1;
       }
 
-      calcSliceRangeAndBools(newItems,  userDisplayChoices[0].currentPage + changePage, numItems,  userDisplayChoices[0].allElemsPerPg, false);
+      calcSliceRangeAndBools(
+        newItems, 
+        userDisplayChoices[0].currentPage + changePage,
+        numItems, 
+        userDisplayChoices[0].allElemsPerPg,
+        refreshAfter
+      );
 
   }
 
@@ -173,7 +183,7 @@ export default function App() {
       mode: 'cors'
     })
       .then((x) => x.json())
-      .then(loadData);
+      .then(loadData(true));
   };
 
   const deleteItem = (id) => {
@@ -185,7 +195,7 @@ export default function App() {
       mode: 'cors'
     })
       .then((x) => x.json())
-      .then(loadData);
+      .then(loadData(true));
   };
 
   const updateItem = (id, itemName, quantity) => {
