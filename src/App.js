@@ -32,17 +32,20 @@ export default function App() {
       totalElements: 5,
       defaultLoad: true
     }]));
-    loadData(true);
   }
 
   const API_ROOT = "https://hn7jn8-8080.csb.app";
 
   const loadData = (askRefresh = false) => {
+    let refresh = false;
+    if (refresh || JSON.parse(localStorage.getItem("userChoices"))[0].defaultLoad) {
+      refresh = true;
+    }
     fetch(`${API_ROOT}/api/list`)
       .then(x => x.json())
       .then(response => {
         setShoppingList(response);
-        setUserMenu(response.length, askRefresh);
+        setUserMenu(response.length, refresh);
       } 
     )
   }
