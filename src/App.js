@@ -26,9 +26,9 @@ export default function App() {
       itemsPerPage: 5,
       sliceStart: 5,
       sliceEnd: 10,
-      suppressJumpToPg: false,
-      suppressNextBtn: false,
-      suppressPrevBtn: false,
+      suppressJumpToPg: true,
+      suppressNextBtn: true,
+      suppressPrevBtn: true,
       defaultLoad: true
     }]);
   }
@@ -37,7 +37,7 @@ export default function App() {
 
   const loadData = (askRefresh = false) => {
     let refresh = false;
-    if (askRefresh || JSON.parse(localStorage.getItem("userChoices"))[0].defaultLoad) {
+    if (askRefresh || userDisplayChoices[0].defaultLoad) {
       refresh = true;
     }
     fetch(`${API_ROOT}/api/list`)
