@@ -17,28 +17,27 @@ export default function App() {
 
   function getInitialState() {
     let savedState = localStorage.getItem("userChoices");
-    if (typeof savedState === "string" && savedState !== '[]') {
+    if (savedState !== null && typeof savedState === "string") {
       return JSON.parse(savedState);
     }
-    localStorage.setItem("userChoices", JSON.stringify([{
+    return ([{
       currentPage: 1,
-      itemsPerPage: 5,
-      suppressPrevBtn: true,
-      suppressNextBtn: true,
-      suppressJumpToPg: true,
-      sliceStart: 0,
-      sliceEnd: 5,
-      allItemsPerPage: false,
       totalElements: 5,
+      itemsPerPage: 5,
+      sliceStart: 5,
+      sliceEnd: 10,
+      suppressJumpToPg: false,
+      suppressNextBtn: false,
+      suppressPrevBtn: false,
       defaultLoad: true
-    }]));
+    }]);
   }
 
   const API_ROOT = "https://hn7jn8-8080.csb.app";
 
   const loadData = (askRefresh = false) => {
     let refresh = false;
-    if (refresh || JSON.parse(localStorage.getItem("userChoices"))[0].defaultLoad) {
+    if (askRefresh || JSON.parse(localStorage.getItem("userChoices"))[0].defaultLoad) {
       refresh = true;
     }
     fetch(`${API_ROOT}/api/list`)
@@ -148,7 +147,7 @@ export default function App() {
 
   const setUserMenu = (numItems, refreshAfter) => {
       let newItems =  userDisplayChoices[0].itemsPerPage;
-      if ( userDisplayChoices[0].allItemsPerPage && newItems !== numItems) {
+      if (userDisplayChoices[0].allItemsPerPage && newItems !== numItems) {
         newItems = numItems;
       }
 
@@ -220,7 +219,7 @@ export default function App() {
   const paginator = () => {
     const pgNums = Math.ceil(
         shoppingList.length / 
-        JSON.parse(localStorage.getItem("userChoices"))[0].itemsPerPage        
+        userDisplayChoices[0].itemsPerPage        
       );
     let pgBtns = [];
     for (let i  = 1; i <= pgNums; i ++) {
@@ -239,10 +238,10 @@ export default function App() {
       <main>
         <ShoppingForm submitItem={addItem} />
         <PageSelect 
-          suppressPrevPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressPrevBtn}
-          suppressNextPgBtn={JSON.parse(localStorage.getItem("userChoices"))[0].suppressNextBtn}
+          suppressPrevPgBtn={userDisplayChoices[0].suppressPrevBtn}
+          suppressNextPgBtn={userDisplayChoices[0].suppressNextBtn}
           pageNumberArray={paginator()}
-          suppressPageJump={JSON.parse(localStorage.getItem("userChoices"))[0].suppressJumpToPg}
+          suppressPageJump={userDisplayChoices[0].suppressJumpToPg}
           perPageChoiceFunc={perPageFunction}
           pageJumpFunc={pageJumpFunction}
           prevFunc={goToPrev}
@@ -250,8 +249,8 @@ export default function App() {
         />
         <ShoppingList
           items={shoppingList.slice(
-            JSON.parse(localStorage.getItem("userChoices"))[0].sliceStart,
-            JSON.parse(localStorage.getItem("userChoices"))[0].sliceEnd
+            userDisplayChoices[0].sliceStart,
+            userDisplayChoices[0].sliceEnd
           )}
           deleteItem={deleteItem}
           updateItem={updateItem}  
