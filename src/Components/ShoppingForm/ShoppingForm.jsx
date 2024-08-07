@@ -34,6 +34,7 @@ export default function ShoppingForm({
                     required
                     id="item"
                     name="item"
+                    maxLength={35}
                     value={item}
                     onChange={handleItemChange}/>
             </div>
@@ -46,6 +47,7 @@ export default function ShoppingForm({
                     name="quantity"
                     value={quantity}
                     min="0"
+                    max="9999"
                     onChange={handleQuantityChange}/>
             </div>
             <div className="form-group">

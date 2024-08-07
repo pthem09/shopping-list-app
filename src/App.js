@@ -247,6 +247,10 @@ export default function App() {
           prevFunc={goToPrev}
           nextFunc={goToNext}
         />
+        <p>
+          Page {userDisplayChoices[0].currentPage} of {Math.ceil(userDisplayChoices[0].totalElements / userDisplayChoices[0].itemsPerPage)}
+          . {userDisplayChoices[0].totalElements} total items.
+        </p>
         <ShoppingList
           items={shoppingList.slice(
             userDisplayChoices[0].sliceStart,
