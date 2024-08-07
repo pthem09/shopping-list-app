@@ -152,11 +152,14 @@ export default function App() {
       }
 
       let changePage = 0;
-      if (numItems >  userDisplayChoices[0].totalElements && !userDisplayChoices[0].defaultLoad) {
+      if (
+        numItems >  userDisplayChoices[0].totalElements
+        && numItems > userDisplayChoices[0].sliceEnd
+        && !userDisplayChoices[0].defaultLoad
+      ) {
         changePage = 1;
       } else if (
-          numItems <  userDisplayChoices[0].totalElements
-          && numItems < userDisplayChoices[0].sliceStart
+          numItems < userDisplayChoices[0].sliceStart
           && userDisplayChoices[0].sliceStart > 0
         ) {
         changePage = -1;
