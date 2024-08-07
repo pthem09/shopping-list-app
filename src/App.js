@@ -241,6 +241,7 @@ export default function App() {
       <main>
         <ShoppingForm submitItem={addItem} />
         <PageSelect 
+          totalItemCount={userDisplayChoices[0].totalElements}
           suppressPrevPgBtn={userDisplayChoices[0].suppressPrevBtn}
           suppressNextPgBtn={userDisplayChoices[0].suppressNextBtn}
           pageNumberArray={paginator()}

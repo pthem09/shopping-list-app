@@ -6,10 +6,11 @@ import {
   } from 'reactstrap';
 import PerPageMenuItem from './PerPageMenuItem';
 import JumpToPageMenuItem from './JumpToPageMenuItem';
-import './PageSelect.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './PageSelect.css';
 
 export default function PageSelect({
+        totalItemCount,
         suppressPrevPgBtn,
         suppressNextPgBtn,
         suppressPageJump,
@@ -26,18 +27,29 @@ export default function PageSelect({
     const [dropdownOpenJump, setDropdownOpenJump] = useState(false);
     const toggleJump = () => setDropdownOpenJump((prevStateJump) => !prevStateJump);
     
-    const itemsPerPage = ["5", "10", "All"];
-    const itemsPerPageStart = itemsPerPage.map(item => <PerPageMenuItem key={`${item}-per`} menuElement={item} clickFunc={perPageChoiceFunc}/>);
-    const itemsPerPageElement = (
-        <div className="d-flex p-2">
-            <Dropdown isOpen={dropdownOpenJump} toggle={toggleJump} direction="down">
-                <DropdownToggle caret>Items per Page:</DropdownToggle>
-                <DropdownMenu>
-                    {itemsPerPageStart}
-                </DropdownMenu>
-            </Dropdown>
-        </div>
-    );
+    let itemsPerPage = [];
+    let itemsPerPageStart;
+    let itemsPerPageElement;
+    if (totalItemCount > 5 && totalItemCount < 10) {
+        itemsPerPage = ["5", "All"];
+    } else if (totalItemCount > 10) {
+        itemsPerPage = ["5", "10", "All"];
+    }
+
+    if (itemsPerPage.length > 0) {
+        itemsPerPageStart = itemsPerPage.map(item => <PerPageMenuItem key={`${item}-per`} menuElement={item} clickFunc={perPageChoiceFunc}/>);
+        itemsPerPageElement = (
+            <div className="d-flex p-2">
+                <Dropdown isOpen={dropdownOpenJump} toggle={toggleJump} direction="down">
+                    <DropdownToggle caret>Items per Page:</DropdownToggle>
+                    <DropdownMenu>
+                        {itemsPerPageStart}
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
+        );
+    }
+
     const jumpToPageElement = createJump();
 
     function createJump() {
