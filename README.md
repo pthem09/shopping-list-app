@@ -18,6 +18,8 @@ Hosting link: https://pthem09.github.io/shopping-list-app
     - CSS
     - JavaScript
     - SQL (CodeSandbox)
+    - Express.js
+    - Node.js
 - Ideas for improvements:
  1. Create a log-in page to allow users to view and edit only their items.
  2. Allow users to view and restore recently deleted items by creating a deleted flag in the SQL database. Also, allow for users to permanently delete items from the recycle bin.
