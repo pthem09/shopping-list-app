@@ -44,6 +44,7 @@ so that I have everything I need on my vacation.
 ### Server side code (Code Sandbox)
 Link: https://codesandbox.io/p/devbox/node-express-hn7jn8?file=%2Findex.js
 
+```
 import express from "express";
 import cors from "cors";
 import sqlite3 from "sqlite3";
@@ -153,3 +154,4 @@ app.put("/api/list/:id", (req, res) => {
     },
   );
 });
+```
