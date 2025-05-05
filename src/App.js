@@ -216,7 +216,7 @@ export default function App() {
       }),
     })
       .then((x) => x.json())
-      .then(loadData);
+      .then(() => loadData());
   };
 
   const paginator = () => {
