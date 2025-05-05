@@ -101,10 +101,10 @@ export default function App() {
 
   function perPageFunction(clickedListValue) {
     if (clickedListValue.menuElement === "All") {
-      calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true, true);
+      calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true, false);
     } else {
       userDisplayChoices[0].allItemsPerPage = false;
-      calcSliceRangeAndBools(clickedListValue.menuElement, userDisplayChoices[0].currentPage, shoppingList.length, false, true);
+      calcSliceRangeAndBools(clickedListValue.menuElement, userDisplayChoices[0].currentPage, shoppingList.length, false, false);
     }
   }
 

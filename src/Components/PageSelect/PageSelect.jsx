@@ -27,14 +27,9 @@ export default function PageSelect({
     const [dropdownOpenJump, setDropdownOpenJump] = useState(false);
     const toggleJump = () => setDropdownOpenJump((prevStateJump) => !prevStateJump);
     
-    let itemsPerPage = [];
+    let itemsPerPage = ["5", "10", "All"];
     let itemsPerPageStart;
     let itemsPerPageElement;
-    if (totalItemCount > 5 && totalItemCount < 10) {
-        itemsPerPage = ["5", "All"];
-    } else if (totalItemCount > 10) {
-        itemsPerPage = ["5", "10", "All"];
-    }
 
     if (itemsPerPage.length > 0) {
         itemsPerPageStart = itemsPerPage.map(item => <PerPageMenuItem key={`${item}-per`} menuElement={item} clickFunc={perPageChoiceFunc}/>);
