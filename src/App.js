@@ -117,7 +117,7 @@ export default function App() {
       userDisplayChoices[0].currentPage,
       shoppingList.length,
       userDisplayChoices[0].allElemsPerPg,
-      true
+      false
     ); 
   }
 
@@ -129,7 +129,7 @@ export default function App() {
       userDisplayChoices[0].currentPage,
       shoppingList.length,
       userDisplayChoices[0].allElemsPerPg,
-      true
+      false
     );
   }
 
@@ -141,7 +141,7 @@ export default function App() {
       userDisplayChoices[0].currentPage,
       shoppingList.length,
       userDisplayChoices[0].allElemsPerPg,
-      true
+      false
     );
   }
 
@@ -188,7 +188,7 @@ export default function App() {
       mode: 'cors'
     })
       .then((x) => x.json())
-      .then(loadData(true));
+      .then(() => loadData(true));
   };
 
   const deleteItem = (id) => {
@@ -200,7 +200,7 @@ export default function App() {
       mode: 'cors'
     })
       .then((x) => x.json())
-      .then(loadData(true));
+      .then(() => loadData(true));
   };
 
   const updateItem = (id, itemName, quantity) => {
@@ -216,7 +216,7 @@ export default function App() {
       }),
     })
       .then((x) => x.json())
-      .then(loadData);
+      .then(() => loadData());
   };
 
   const paginator = () => {
