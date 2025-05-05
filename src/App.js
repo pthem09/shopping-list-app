@@ -35,23 +35,19 @@ export default function App() {
 
   const API_ROOT = "https://hn7jn8-8080.csb.app";
 
-  const loadData = (askRefresh = false) => {
-    let refresh = false;
-    if (askRefresh || userDisplayChoices[0].defaultLoad) {
-      refresh = true;
-    }
+  const loadData = () => {
     fetch(`${API_ROOT}/api/list`)
       .then(x => x.json())
       .then(response => {
         setShoppingList(response);
-        setUserMenu(response.length, refresh);
+        setUserMenu(response.length);
       } 
     )
   }
 
   useEffect(loadData, []);
 
-  function calcSliceRangeAndBools(elemsPerPg, currPg, totElems, allElemsPerPg, refreshNeeded) {
+  function calcSliceRangeAndBools(elemsPerPg, currPg, totElems, allElemsPerPg) {
     let newCurr = parseInt(currPg);
     let lastPg = Math.ceil(totElems / elemsPerPg);
 
@@ -93,18 +89,15 @@ export default function App() {
       totalElements: totElems,
       defaultLoad: false
     }]);
-
-    if (refreshNeeded) {
-      window.location.reload();
-    }
   }
 
   function perPageFunction(clickedListValue) {
     if (clickedListValue.menuElement === "All") {
-      calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true, false);
+      userDisplayChoices[0].allItemsPerPage = true;
+      calcSliceRangeAndBools(shoppingList.length, 1, shoppingList.length, true);
     } else {
       userDisplayChoices[0].allItemsPerPage = false;
-      calcSliceRangeAndBools(clickedListValue.menuElement, userDisplayChoices[0].currentPage, shoppingList.length, false, false);
+      calcSliceRangeAndBools(clickedListValue.menuElement, userDisplayChoices[0].currentPage, shoppingList.length, false);
     }
   }
 
@@ -116,8 +109,7 @@ export default function App() {
       userDisplayChoices[0].itemsPerPage,
       userDisplayChoices[0].currentPage,
       shoppingList.length,
-      userDisplayChoices[0].allElemsPerPg,
-      false
+      userDisplayChoices[0].allElemsPerPg
     ); 
   }
 
@@ -128,8 +120,7 @@ export default function App() {
       userDisplayChoices[0].itemsPerPage,
       userDisplayChoices[0].currentPage,
       shoppingList.length,
-      userDisplayChoices[0].allElemsPerPg,
-      false
+      userDisplayChoices[0].allElemsPerPg
     );
   }
 
@@ -140,12 +131,11 @@ export default function App() {
       userDisplayChoices[0].itemsPerPage,
       userDisplayChoices[0].currentPage,
       shoppingList.length,
-      userDisplayChoices[0].allElemsPerPg,
-      false
+      userDisplayChoices[0].allElemsPerPg
     );
   }
 
-  const setUserMenu = (numItems, refreshAfter) => {
+  const setUserMenu = (numItems) => {
       let newItems =  userDisplayChoices[0].itemsPerPage;
       if (userDisplayChoices[0].allItemsPerPage && newItems !== numItems) {
         newItems = numItems;
@@ -153,7 +143,8 @@ export default function App() {
 
       let changePage = 0;
       if (
-        numItems >  userDisplayChoices[0].totalElements
+        !userDisplayChoices[0].allItemsPerPage
+        && numItems >  userDisplayChoices[0].totalElements
         && numItems > userDisplayChoices[0].sliceEnd
         && !userDisplayChoices[0].defaultLoad
       ) {
@@ -169,8 +160,7 @@ export default function App() {
         newItems, 
         userDisplayChoices[0].currentPage + changePage,
         numItems, 
-        userDisplayChoices[0].allElemsPerPg,
-        refreshAfter
+        userDisplayChoices[0].allElemsPerPg
       );
 
   }
