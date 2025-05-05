@@ -71,8 +71,8 @@ export default function PageSelect({
 
     return (
         <nav className="page-select-menu">
-            {suppressPrevPgBtn ? '' : <button className="btn btn-light prev-next-btn" key="prev" type="Submit" onClick={prevFunc}>Previous Page</button>}
-            {suppressNextPgBtn ? '' : <button className="btn btn-info prev-next-btn" key="next" type="Submit" onClick={nextFunc}>Next Page</button>}
+            {suppressPrevPgBtn ? '' : <button className="btn btn-secondary prev-next-btn" key="prev" type="Submit" onClick={prevFunc}>Previous Page</button>}
+            {suppressNextPgBtn ? '' : <button className="btn btn-secondary prev-next-btn" key="next" type="Submit" onClick={nextFunc}>Next Page</button>}
             {itemsPerPageElement}
             {jumpToPageElement}
         </nav>
