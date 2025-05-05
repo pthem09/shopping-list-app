@@ -1,41 +1,16 @@
-body {
-    background-color: lightyellow;
-}
-
 .shopping-item-li {
+    display: inline-flex;
     margin: 1rem;
     padding: 2rem;
     border: 1px solid black;
     border-radius: 2rem;
-    background-color: #ccc;
-    list-style: none;
     box-shadow: 2px 2px 4px black;
 }
 
+button {
+    margin: 0.15rem;
+}
+
 .shopping-list-container {
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(0, 0, 255, 15%);
     margin: 0px 20%;
-}
-
-.shopping-edit {
-    background-color: lightgreen;
-    margin: 5px;
-}
-
-.shopping-delete {
-    background-color: lightcoral;
-}
-
-.shopping-cancel {
-    background-color: yellow;
-}
-
-/* small screen container expansion */
-@media (max-width: 600px) { 
-    .shopping-list-container {
-       margin: 0px 2%;
-    }
 }

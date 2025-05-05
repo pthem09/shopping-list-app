@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./ShoppingForm.css";
+import "../Bootswatch-CSS/Superhero.css";
 
 export default function ShoppingForm({
         submitItem,
@@ -51,7 +52,7 @@ export default function ShoppingForm({
                     onChange={handleQuantityChange}/>
             </div>
             <div className="form-group">
-                <button className="shopping-edit" type="Submit">{submitButtonText}</button>
+                <button className="btn btn-success" type="Submit">{submitButtonText}</button>
             </div>
         </form>
     );
