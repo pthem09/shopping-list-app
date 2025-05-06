@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./ShoppingForm.css";
-import "bootswatch/dist/superhero/bootstrap.min.css";
 
 export default function ShoppingForm({
         submitItem,

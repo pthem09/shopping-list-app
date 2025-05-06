@@ -7,7 +7,6 @@ import {
 import PerPageMenuItem from './PerPageMenuItem';
 import JumpToPageMenuItem from './JumpToPageMenuItem';
 import './PageSelect.css';
-import "bootswatch/dist/superhero/bootstrap.min.css";;
 
 export default function PageSelect({
         suppressPrevPgBtn,
