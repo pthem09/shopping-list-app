@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ShoppingForm from "../ShoppingForm/ShoppingForm";
 import "./ShoppingItem.css";
-import "../Bootswatch-CSS/Superhero.css";
 
 export default function ShoppingItem({ id, itemName, quantity, deleteItem, updateItem }) {
     
